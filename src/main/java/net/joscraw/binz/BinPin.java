@@ -20,6 +20,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -75,7 +79,7 @@ public class BinPin extends AppCompatActivity {
                 }
 
                if(documentSnapshot != null && documentSnapshot.exists()) {
-                   counter.setText(documentSnapshot.getData().toString());
+                   counter.setText(documentSnapshot.getData().get("Count").toString());
                }
             }
         });
@@ -93,19 +97,21 @@ public class BinPin extends AppCompatActivity {
 
     private void getBin(String id) {
 
-    }
-
-    private boolean inUse(String binId) {
         boolean inUse = false;
 
-        DocumentReference tempBins = data.collection("tempBins").document(binId);
+        final DocumentReference tempBins = data.collection("tempBins").document(id);
         tempBins.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
-                        return document.getData();
+                        if(!document.getData().containsKey("inUse")) {
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("inUse", true);
+                            data.put("user", auth.getCurrentUser().getUid());
+                            tempBins.set(data, SetOptions.merge());
+                        }
                     }
                 }
             }
