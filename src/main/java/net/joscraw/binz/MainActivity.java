@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private TextView emailField, passwordField;
-    private Button submitButton;
+    private Button submitButton, signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +37,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Button
         submitButton = findViewById(R.id.submit);
+        signUpButton = findViewById(R.id.signUp);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logIn(emailField.getText().toString(), passwordField.getText().toString());
+            }
+        });
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toSignUp();
             }
         });
 
@@ -108,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void toSignUp() {
+        Intent intent = new Intent(this, SignUp.class);
+        startActivity(intent);
     }
 
 
