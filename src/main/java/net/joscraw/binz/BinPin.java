@@ -61,12 +61,18 @@ public class BinPin extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if(document.exists()) {
-                        Log.d(TAG, "DocumentData" + document.getData());
-                        counter.setText(document.getData().get("Count").toString());
-                    } else {
-                        Log.d(TAG, "Document not found");
+                    try {
+                        if(document.exists()) {
+                            Log.d(TAG, "DocumentData" + document.getData());
+                            counter.setText(document.getData().get("Count").toString());
+                        } else {
+                            Log.d(TAG, "Document not found");
+                        }
+                    } catch (NullPointerException e) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Failed to get count", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
+
                 } else {
                     Log.d(TAG, "Failed: " + task.getException());
                 }
@@ -80,10 +86,14 @@ public class BinPin extends AppCompatActivity {
                     Log.w(TAG, "Listen Failed");
                     return;
                 }
-
-               if(documentSnapshot != null && documentSnapshot.exists()) {
-                   counter.setText(documentSnapshot.getData().get("Count").toString());
-               }
+                try {
+                    if(documentSnapshot != null && documentSnapshot.exists()) {
+                        counter.setText(documentSnapshot.getData().get("Count").toString());
+                    }
+                } catch (NullPointerException e) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Failed to get count", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 

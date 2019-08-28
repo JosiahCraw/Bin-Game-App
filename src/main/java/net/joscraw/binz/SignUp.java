@@ -80,8 +80,7 @@ public class SignUp extends AppCompatActivity {
             email.setError("Email Required");
             return;
         }
-        if(passwordStr == ""
-        ) {
+        if(passwordStr == "") {
             password.setError("Password Required");
             return;
         }
