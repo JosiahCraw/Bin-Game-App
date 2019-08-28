@@ -3,6 +3,7 @@ package net.joscraw.binz;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class BinPin extends AppCompatActivity {
     private FirebaseFirestore data;
 
     private TextView counter;
-    private Button enter;
+    private Button enter, signOut;
     private EditText codeBox;
 
     @Override
@@ -46,12 +47,13 @@ public class BinPin extends AppCompatActivity {
         counter = findViewById(R.id.counter);
         codeBox = findViewById(R.id.binPin);
         enter = findViewById(R.id.submit);
+        signOut = findViewById(R.id.signOut);
 
         auth = FirebaseAuth.getInstance();
         data = FirebaseFirestore.getInstance();
 
 
-        final DocumentReference docRef = data.collection("Counts").document(auth.getCurrentUser().getUid());
+        final DocumentReference docRef = data.collection("Users").document(auth.getCurrentUser().getUid());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -60,7 +62,7 @@ public class BinPin extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         Log.d(TAG, "DocumentData" + document.getData());
-                        counter.setText(document.getData().toString());
+                        counter.setText(document.getData().get("Count").toString());
                     } else {
                         Log.d(TAG, "Document not found");
                     }
@@ -93,6 +95,14 @@ public class BinPin extends AppCompatActivity {
                 getBin(id);
             }
         });
+
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                toMainPage();
+            }
+        });
     }
 
     private void getBin(String id) {
@@ -106,12 +116,10 @@ public class BinPin extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
-                        if(!document.getData().containsKey("inUse")) {
-                            Map<String, Object> data = new HashMap<>();
-                            data.put("inUse", true);
-                            data.put("user", auth.getCurrentUser().getUid());
-                            tempBins.set(data, SetOptions.merge());
-                        }
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("inUse", true);
+                        data.put("user", auth.getCurrentUser().getUid());
+                        tempBins.set(data);
                     }
                 }
             }
@@ -123,8 +131,14 @@ public class BinPin extends AppCompatActivity {
 
         if(codeBox.getText().toString() != null) {
             id = codeBox.getText().toString();
+            codeBox.setText("");
         }
 
         return id;
+    }
+
+    private void toMainPage() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
