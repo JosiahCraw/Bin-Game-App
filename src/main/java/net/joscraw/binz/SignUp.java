@@ -72,15 +72,16 @@ public class SignUp extends AppCompatActivity {
         emailStr = email.getText().toString();
         passwordStr = password.getText().toString();
 
-        if(nameStr == null) {
+        if(nameStr == "") {
             name.setError("Name Required");
             return;
         }
-        if(emailStr == null) {
+        if(emailStr == "") {
             email.setError("Email Required");
             return;
         }
-        if(passwordStr == null) {
+        if(passwordStr == ""
+        ) {
             password.setError("Password Required");
             return;
         }

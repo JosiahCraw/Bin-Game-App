@@ -119,10 +119,11 @@ public class BinPin extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("user", auth.getCurrentUser().getUid());
-                        data.put("inUse", true);
-                        tempBins.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Map<String, Object> userData = new HashMap<>();
+                        final Map<String, Object> useData = new HashMap<>();
+                        userData.put("user", auth.getCurrentUser().getUid());
+                        useData.put("inUse", true);
+                        tempBins.set(userData, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
@@ -132,6 +133,14 @@ public class BinPin extends AppCompatActivity {
                                     Toast toast = Toast.makeText(getApplicationContext(), "Failed to get Bin", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
+                                tempBins.set(useData, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "Took Bin");
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
