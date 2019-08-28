@@ -90,7 +90,7 @@ public class BinPin extends AppCompatActivity {
                     if(documentSnapshot != null && documentSnapshot.exists()) {
                         counter.setText(documentSnapshot.getData().get("Count").toString());
                     }
-                } catch (NullPointerException e) {
+                } catch (NullPointerException ex) {
                     Toast toast = Toast.makeText(getApplicationContext(), "Failed to get count", Toast.LENGTH_SHORT);
                     toast.show();
                 }

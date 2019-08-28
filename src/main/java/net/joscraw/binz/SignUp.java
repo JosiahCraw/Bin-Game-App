@@ -93,7 +93,7 @@ public class SignUp extends AppCompatActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), "Sign Up Succesful!", Toast.LENGTH_SHORT);
                     toast.show();
 
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseUser user = auth.getCurrentUser();
 
                     UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
                             .setDisplayName(name.getText().toString())
