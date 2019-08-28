@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -92,7 +93,9 @@ public class BinPin extends AppCompatActivity {
 
                 String id = getIdData();
 
-                getBin(id);
+                if(id != null) {
+                    getBin(id);
+                }
             }
         });
 
@@ -117,9 +120,20 @@ public class BinPin extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         Map<String, Object> data = new HashMap<>();
-                        data.put("inUse", true);
                         data.put("user", auth.getCurrentUser().getUid());
-                        tempBins.set(data);
+                        data.put("inUse", true);
+                        tempBins.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Succesfully got Bin!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                } else {
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Failed to get Bin", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            }
+                        });
                     }
                 }
             }
@@ -132,6 +146,10 @@ public class BinPin extends AppCompatActivity {
         if(codeBox.getText().toString() != null) {
             id = codeBox.getText().toString();
             codeBox.setText("");
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please Enter Code", Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
         }
 
         return id;
