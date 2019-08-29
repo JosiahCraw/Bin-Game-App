@@ -100,12 +100,13 @@ public class BinPin extends AppCompatActivity {
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String id = getIdData();
-
-                if(id != null) {
-                    getBin(id);
+                String code = codeBox.getText().toString();
+                if(code.matches("")) {
+                    codeBox.setError("Please Enter Pin");
+                    return;
                 }
+                getBin(code);
+                codeBox.setText("");
             }
         });
 
@@ -129,11 +130,10 @@ public class BinPin extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
-                        Map<String, Object> userData = new HashMap<>();
-                        final Map<String, Object> useData = new HashMap<>();
-                        userData.put("user", auth.getCurrentUser().getUid());
-                        useData.put("inUse", true);
-                        tempBins.set(userData, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("inUse", true);
+                        data.put("user", auth.getCurrentUser().getUid());
+                        tempBins.set(data, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
@@ -143,16 +143,11 @@ public class BinPin extends AppCompatActivity {
                                     Toast toast = Toast.makeText(getApplicationContext(), "Failed to get Bin", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
-                                tempBins.set(useData, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "Took Bin");
-                                        }
-                                    }
-                                });
                             }
                         });
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Bin does not exist", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }
             }
@@ -162,12 +157,11 @@ public class BinPin extends AppCompatActivity {
     private String getIdData() {
         String id = null;
 
-        if(codeBox.getText().toString() != null) {
+        if(codeBox.getText().toString() != "") {
             id = codeBox.getText().toString();
             codeBox.setText("");
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please Enter Code", Toast.LENGTH_SHORT);
-            toast.show();
+            codeBox.setError("Enter Code");
             return null;
         }
 
