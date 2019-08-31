@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class BinPin extends AppCompatActivity {
 
     private TextView counter;
     private Button enter, signOut;
+    private ProgressBar binCheckBar;
     private EditText codeBox;
 
     @Override
@@ -49,6 +51,9 @@ public class BinPin extends AppCompatActivity {
         codeBox = findViewById(R.id.binPin);
         enter = findViewById(R.id.submit);
         signOut = findViewById(R.id.signOut);
+        binCheckBar = findViewById(R.id.binProgessBar);
+
+        binCheckBar.setVisibility(View.INVISIBLE);
 
         auth = FirebaseAuth.getInstance();
         data = FirebaseFirestore.getInstance();
@@ -100,6 +105,7 @@ public class BinPin extends AppCompatActivity {
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binCheckBar.setVisibility(View.VISIBLE);
                 String code = codeBox.getText().toString();
                 if(code.matches("")) {
                     codeBox.setError("Please Enter Pin");
@@ -137,15 +143,18 @@ public class BinPin extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    binCheckBar.setVisibility(View.INVISIBLE);
                                     Toast toast = Toast.makeText(getApplicationContext(), "Succesfully got Bin!", Toast.LENGTH_SHORT);
                                     toast.show();
                                 } else {
+                                    binCheckBar.setVisibility(View.INVISIBLE);
                                     Toast toast = Toast.makeText(getApplicationContext(), "Failed to get Bin", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
                             }
                         });
                     } else {
+                        binCheckBar.setVisibility(View.INVISIBLE);
                         Toast toast = Toast.makeText(getApplicationContext(), "Bin does not exist", Toast.LENGTH_SHORT);
                         toast.show();
                     }

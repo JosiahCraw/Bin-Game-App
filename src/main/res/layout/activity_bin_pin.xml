@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BinPin">
+    tools:context=".BinPin"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/binProgessBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:indeterminate="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,6 +59,8 @@
                 android:text="Sign Out" />
 
         </LinearLayout>
+
+
 
     </LinearLayout>
 
