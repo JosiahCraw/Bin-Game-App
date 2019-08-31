@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +24,7 @@ public class SignUp extends AppCompatActivity {
 
     private Button signUp, logIn;
     private EditText name, email, password;
+    private ProgressBar signUpProgress;
     private FirebaseAuth auth;
 
     private static final String TAG = "Sign Up";
@@ -37,6 +39,9 @@ public class SignUp extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        signUpProgress = findViewById(R.id.signUpBar);
+
+        signUpProgress.setVisibility(View.INVISIBLE);
 
         auth = FirebaseAuth.getInstance();
 
@@ -50,6 +55,7 @@ public class SignUp extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                signUpProgress.setVisibility(View.VISIBLE);
                 signUp();
             }
         });
@@ -108,6 +114,8 @@ public class SignUp extends AppCompatActivity {
                         }
                     });
 
+                    signUpProgress.setVisibility(View.INVISIBLE);
+
                     signIn();
                 } else {
                     Log.d(TAG, "SignUpEmailFailure");
@@ -117,6 +125,8 @@ public class SignUp extends AppCompatActivity {
                     name.setText("");
                     email.setText("");
                     password.setText("");
+
+                    signUpProgress.setVisibility(View.INVISIBLE);
 
                 }
             }

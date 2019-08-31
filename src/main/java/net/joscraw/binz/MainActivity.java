@@ -3,12 +3,14 @@ package net.joscraw.binz;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firestore.admin.v1beta1.Progress;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private TextView emailField, passwordField;
     private Button submitButton, signUpButton;
+    private ProgressBar logInProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,13 @@ public class MainActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submit);
         signUpButton = findViewById(R.id.signUp);
 
+        logInProgress = findViewById(R.id.logInBar);
+        logInProgress.setVisibility(View.INVISIBLE);
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                logInProgress.setVisibility(View.VISIBLE);
                 logIn(emailField.getText().toString(), passwordField.getText().toString());
             }
         });
@@ -54,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         auth = FirebaseAuth.getInstance();
+
+
 
     }
 
@@ -92,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         return vaild;
     }
 
-    private void logIn(String email, String password) {
+    private void logIn(String email, final String password) {
         Log.d(TAG, "Login, " + email);
         if (!checkForms()) {
             return;
@@ -105,13 +115,17 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Login Success");
                             FirebaseUser user = auth.getCurrentUser();
+                            logInProgress.setVisibility(View.INVISIBLE);
                             updateUI(user);
                         } else {
                             Log.d(TAG, "Login Failed");
+                            logInProgress.setVisibility(View.INVISIBLE);
+                            passwordField.setText("");
                             Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                         }
 
                         if (!task.isSuccessful()) {
+                            logInProgress.setVisibility(View.INVISIBLE);
                             Log.d(TAG, "FireBase Failed");
                         }
                     }

@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUp">
+    tools:context=".SignUp"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/signUpBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:indeterminate="true"  />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,6 +68,8 @@
                 />
 
         </LinearLayout>
+
+
 
 
     </LinearLayout>
