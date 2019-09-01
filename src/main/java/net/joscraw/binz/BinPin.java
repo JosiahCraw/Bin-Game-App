@@ -105,12 +105,12 @@ public class BinPin extends AppCompatActivity {
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binCheckBar.setVisibility(View.VISIBLE);
                 String code = codeBox.getText().toString();
                 if(code.matches("")) {
                     codeBox.setError("Please Enter Pin");
                     return;
                 }
+                binCheckBar.setVisibility(View.VISIBLE);
                 getBin(code);
                 codeBox.setText("");
             }
