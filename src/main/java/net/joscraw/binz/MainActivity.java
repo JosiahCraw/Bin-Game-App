@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logInProgress.setVisibility(View.VISIBLE);
                 logIn(emailField.getText().toString(), passwordField.getText().toString());
             }
         });
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         if (!checkForms()) {
             return;
         }
-
+        logInProgress.setVisibility(View.VISIBLE);
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
