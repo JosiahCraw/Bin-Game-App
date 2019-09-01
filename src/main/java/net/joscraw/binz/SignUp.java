@@ -55,7 +55,6 @@ public class SignUp extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUpProgress.setVisibility(View.VISIBLE);
                 signUp();
             }
         });
@@ -90,7 +89,7 @@ public class SignUp extends AppCompatActivity {
             password.setError("Password Required");
             return;
         }
-
+        signUpProgress.setVisibility(View.VISIBLE);
         auth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
