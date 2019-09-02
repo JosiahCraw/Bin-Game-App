@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Login";
 
     private FirebaseAuth auth;
-    private TextView emailField, passwordField;
-    private Button submitButton, signUpButton;
+    private TextView emailField, passwordField, signUp;
+    private Button submitButton;
     private ProgressBar logInProgress;
 
     @Override
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Button
         submitButton = findViewById(R.id.submit);
-        signUpButton = findViewById(R.id.signUp);
+
+        signUp = findViewById(R.id.signUp);
 
         logInProgress = findViewById(R.id.logInBar);
         logInProgress.setVisibility(View.INVISIBLE);
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toSignUp();
@@ -61,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         auth = FirebaseAuth.getInstance();
-
-
-
     }
 
     @Override
