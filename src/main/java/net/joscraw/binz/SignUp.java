@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +23,11 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class SignUp extends AppCompatActivity {
 
 
-    private Button signUp, logIn;
+    private Button signUp;
     private EditText name, email, password;
     private ProgressBar signUpProgress;
     private FirebaseAuth auth;
+    private TextView logIn;
 
     private static final String TAG = "Sign Up";
 
