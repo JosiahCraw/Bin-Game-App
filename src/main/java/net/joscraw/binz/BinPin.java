@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -36,10 +37,14 @@ public class BinPin extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore data;
 
-    private TextView counter;
+    private TextView counter, nameZone;
     private Button enter, signOut;
     private ProgressBar binCheckBar;
     private EditText codeBox;
+
+    private DocumentReference tempBins;
+
+    private ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +56,15 @@ public class BinPin extends AppCompatActivity {
         enter = findViewById(R.id.submit);
         signOut = findViewById(R.id.signOut);
         binCheckBar = findViewById(R.id.binProgessBar);
+        nameZone = findViewById(R.id.BinTitle);
 
         binCheckBar.setVisibility(View.INVISIBLE);
 
         auth = FirebaseAuth.getInstance();
         data = FirebaseFirestore.getInstance();
 
+
+        nameZone.setText("Enter a code to start");
 
         final DocumentReference docRef = data.collection("Users").document(auth.getCurrentUser().getUid());
 
@@ -111,6 +119,7 @@ public class BinPin extends AppCompatActivity {
                 }
                 binCheckBar.setVisibility(View.VISIBLE);
                 getBin(code);
+                setupBin();
                 codeBox.setText("");
             }
         });
@@ -128,7 +137,7 @@ public class BinPin extends AppCompatActivity {
 
         boolean inUse = false;
 
-        final DocumentReference tempBins = data.collection("tempBins").document(id);
+        tempBins = data.collection("tempBins").document(id);
         tempBins.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -174,6 +183,60 @@ public class BinPin extends AppCompatActivity {
         }
 
         return id;
+    }
+
+    private void setupBin() {
+        tempBins.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    try {
+                        if (doc.exists()) {
+                            final String binCode = doc.getData().get("bin").toString();
+
+                            final DocumentReference mainBinDoc = data.collection("bins").document(binCode);
+
+                            mainBinDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot binDoc = task.getResult();
+                                        try {
+                                            if (binDoc.exists()) {
+                                                String binName = binDoc.getData().get("name").toString();
+                                                nameZone.setText("Acsessing bin in: " + binName);
+                                            }
+                                        } catch (NullPointerException e) {
+                                            Log.w(TAG, e.getMessage());
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    } catch (NullPointerException e) {
+                        Log.w(TAG, e.getMessage());
+                    }
+                }
+            }
+        });
+
+        registration = tempBins.addSnapshotListener(BinPin.this ,new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen Failed");
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    if (documentSnapshot.getData().get("closed").toString() == "true") {
+                        Log.d(TAG, "Got data");
+                        nameZone.setText("Enter a code to start");
+                        registration.remove();
+                    }
+                }
+            }
+        });
     }
 
     private void toMainPage() {
