@@ -4,4 +4,4 @@ of items put into the bin by any given user. This is done with integrations
 with the Google Firebase backend.
 
 ## Pictures
-![App Design](wiki/app-design.jpg)
+![App Design](wiki/app-design.JPG)
