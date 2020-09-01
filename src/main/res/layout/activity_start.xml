@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Start"
-    android:background="@drawable/background">
+    android:background="@mipmap/background">
 
     <TextView
         android:id="@+id/noAcc"
@@ -15,7 +15,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/semibold"
+        android:fontFamily="san-sarif-semibold"
         android:text="Don't have an account?"
         android:textColor="@color/gray"
         android:textSize="20dp"
@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/semibold"
+        android:fontFamily="san-sarif-semibold"
         android:text="Register"
         android:textColor="@color/blue"
         android:textSize="20dp"
@@ -53,7 +53,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/semibold"
+        android:fontFamily="san-sarif-semibold"
         android:text="Welcome"
         android:textColor="@color/white"
         android:textSize="50dp"
@@ -72,7 +72,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="668dp"
-        android:fontFamily="@font/light"
+        android:fontFamily="san-sarif-light"
         android:text="Login or Register to start collecting points"
         android:textColor="@color/white"
         android:textSize="15dp"
@@ -94,7 +94,7 @@
         android:width="180dp"
         android:height="50dp"
         android:background="@drawable/button"
-        android:fontFamily="@font/semibold"
+        android:fontFamily="san-sarif-semibold"
         android:text="Login"
         android:textAllCaps="false"
         android:textColor="@color/white"
