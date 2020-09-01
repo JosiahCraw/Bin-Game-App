@@ -5,3 +5,7 @@ with the Google Firebase backend.
 
 ## Pictures
 ![App Design](wiki/app-design.JPG)
+
+## Demo
+
+![Demo](wiki/app-demo.gif)
